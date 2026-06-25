@@ -63,6 +63,16 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_021DCEBC106F457CAC1EF5923794D959 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_51D59623F7054753AE5614E46C84E769 }}
 
+      - name: 'Enable Azure Functions v4 worker indexing'
+        shell: pwsh
+        run: |
+          $rg = az functionapp list --query "[?name=='keyvault-api-demo'].resourceGroup | [0]" -o tsv
+          az functionapp config appsettings set `
+            --name keyvault-api-demo `
+            --resource-group $rg `
+            --settings AzureWebJobsFeatureFlags=EnableWorkerIndexing `
+            FUNCTIONS_NODE_BLOCK_ON_ENTRY_POINT_ERROR=true
+
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
@@ -70,4 +80,5 @@ jobs:
           app-name: 'keyvault-api-demo'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          scm-do-build-during-deployment: true
           
