@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"No tests specified\"",
-    "start": "node index.js",
-    "dev": "node --watch index.js"
+    "start": "node local.js",
+    "dev": "node --watch local.js"
   },
   "keywords": [],
   "author": "",
